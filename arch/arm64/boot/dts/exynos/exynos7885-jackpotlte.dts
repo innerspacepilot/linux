@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: BSD-3-Clause
+/*
+ * Copyright (c) 2020, Dávid Virág <virag.david003@gmail.com>
+ * Copyright (C) 2020, Ivaylo Ivanov <ivo.ivanov@null.net>
+ */
+
+/dts-v1/;
+#include "exynos7885.dtsi"
+
+/ {
+	model = "Samsung Galaxy A8 (2018)";
+	compatible = "samsung,jackpotlte", "samsung,exynos7885";
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x0 0x80000000 0x0 0x3DA00000>;
+	};
+
+	memory@C0000000 {
+		device_type = "memory";
+		reg = <0x0 0xC0000000 0x0 0x40000000>;
+	};
+
+	memory@880000000 {
+		device_type = "memory";
+		reg = <0x00000008 0x80000000 0x0 0x40000000>;
+	};
+
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		ramoops@92400000 {
+			compatible = "ramoops";
+			reg = <0 0x92400000 0 0x8000>;
+			record-size = <0x4000>;
+			console-size = <0x4000>;
+		};
+	};
+};
+
+&xxti {
+	clock-frequency = <26000000>;
+};
