@@ -32,6 +32,7 @@ static const struct exynos_soc_id {
 	{ "EXYNOS5440", 0xE5440000 },
 	{ "EXYNOS5800", 0xE5422000 },
 	{ "EXYNOS7420", 0xE7420000 },
+	{ "EXYNOS7885", 0xE7885000 },
 	{ "EXYNOS5433", 0xE5433000 },
 };
 
