@@ -177,6 +177,17 @@
 			reg = <0x139B0000 0x1000>;
 			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
 		};
+
+		pmu_system_controller: system-controller@11c80000 {
+			compatible = "samsung,exynos7885-pmu", "syscon";
+			reg = <0x11c80000 0x10000>;
+			reboot: syscon-reboot {
+				compatible = "syscon-reboot";
+				regmap = <&pmu_system_controller>;
+				offset = <0x400>; /* SWRESET */
+				mask = <0x1>;
+			};
+		};
 	};
 
 	timer: timer {
