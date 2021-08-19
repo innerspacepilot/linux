@@ -1,0 +1,111 @@
+/*
+ * SAMSUNG UNIVERSAL7885 board device tree source
+ *
+ * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+ *		http://www.samsung.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+*/
+
+//#include "exynos7885-rmem.dtsi"
+#include "exynos7885.dtsi"
+#include "exynos7885-display-lcd.dtsi"
+/ {
+	model = "Samsung Universal7885 board based on EXYNOS7885";
+	compatible = "samsung,exynos7885", "samsung,Universal7885";
+
+	ect {
+		parameter_address = <0x90000000>;
+		parameter_size = <0x19000>;
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x0 0x80000000 0x3DA00000>;
+	};
+
+	memory@C0000000 {
+		device_type = "memory";
+		reg = <0x0 0xC0000000 0x40000000>;
+	};
+
+	memory@880000000 {
+		device_type = "memory";
+		reg = <0x00000008 0x80000000 0x40000000>;
+	};
+
+	chosen {
+		bootargs = "";
+		linux,initrd-start = <0x84000000>;
+		linux,initrd-end = <0x840FFFFF>;
+	};
+
+	fixed-rate-clocks {
+		oscclk {
+			compatible = "samsung,exynos7885-oscclk";
+			clock-frequency = <26000000>;
+		};
+	};
+
+	pinctrl@11CB0000 {
+		key_power: key-power {
+			samsung,pins = "gpa1-7";
+			samsung,pin-function = <0xf>;
+			samsung,pin-pud = <0>;
+			samsung,pin-drv = <0>;
+		};
+
+		key_voldown: key-voldown {
+			samsung,pins = "gpa1-6";
+			samsung,pin-function = <0xf>;
+			samsung,pin-pud = <0>;
+			samsung,pin-drv = <0>;
+		};
+
+		key_volup: key-volup {
+			samsung,pins = "gpa1-5";
+			samsung,pin-function = <0xf>;
+			samsung,pin-pud = <0>;
+			samsung,pin-drv = <0>;
+		};
+	};
+
+	gpio_keys {
+		status = "okay";
+		compatible = "gpio-keys";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&key_voldown &key_volup &key_power>;
+		button@1 {
+			label = "gpio-keys: KEY_VOLUMEDOWN";
+			interrupts = <6 0 0>;
+			interrupt-parent = <&gpa1>;
+			linux,code = <114>;
+			gpios = <&gpa1 6 0xf>;
+		};
+		button@2 {
+			label = "gpio-keys: KEY_VOLUMEUP";
+			interrupts = <5 0 0>;
+			interrupt-parent = <&gpa1>;
+			linux,code = <115>;
+			gpios = <&gpa1 5 0xf>;
+		};
+		button@3 {
+			label = "gpio-keys: KEY_POWER";
+			interrupts = <7 0 0>;
+			interrupt-parent = <&gpa1>;
+			linux,code = <116>;
+			gpios = <&gpa1 7 0xf>;
+			gpio-key,wakeup = <1>;
+		};
+
+	};
+
+	dsim_0: dsim@0x14870000 {
+		lcd_info = <&s6e3fa7>;
+	};
+};
+
