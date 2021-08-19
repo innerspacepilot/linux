@@ -1,0 +1,62 @@
+#
+# Trace(debugging) driver configuration
+#
+
+menuconfig TRACE
+	bool "TRACE driver support"
+	default y
+	help
+	  The "TRACE driver" is a kind of driver for debugging
+
+if TRACE
+
+menuconfig EXYNOS_SNAPSHOT
+	bool "Exynos SnapShot(ESS) support for debugging"
+	default y
+	depends on ARCH_EXYNOS
+
+config EXYNOS_SNAPSHOT_CALLSTACK
+	int "shown callstack level"
+	depends on EXYNOS_SNAPSHOT
+	range 1 4
+	default 4
+
+config EXYNOS_SNAPSHOT_PSTORE
+	bool "Enable supporting ramoops driver for pstore filesystem"
+	depends on EXYNOS_SNAPSHOT
+	select PSTORE
+	select PSTORE_RAM
+	select PSTORE_PMSG
+	default y
+
+config EXYNOS_SNAPSHOT_HOOK_LOGGER
+	bool "Enable hooking android platform log for ramdump"
+	depends on EXYNOS_SNAPSHOT
+	default y
+
+config EXYNOS_SNAPSHOT_PANIC_REBOOT
+	bool "Enable forced reboot after panic for ramdump"
+	depends on EXYNOS_SNAPSHOT
+	default y
+
+config EXYNOS_SNAPSHOT_WATCHDOG_RESET
+	bool "Support watchdog reset when hardlockup detect"
+	depends on EXYNOS_SNAPSHOT && EXYNOS_SNAPSHOT_PANIC_REBOOT
+	default y
+
+config EXYNOS_SNAPSHOT_CRASH_KEY
+	bool "Support Crash Key to artificial panic for debugging"
+	depends on EXYNOS_SNAPSHOT && KEYBOARD_GPIO
+	default y
+
+config EXYNOS_SNAPSHOT_SFRDUMP
+	bool "Support dump of sfr region for debugging"
+	depends on EXYNOS_SNAPSHOT && !EXYNOS_SNAPSHOT_MINIMIZED_MODE
+	default y
+
+config EXYNOS_SNAPSHOT_MINIMIZED_MODE
+	bool "Support minimized feature configuration"
+	depends on EXYNOS_SNAPSHOT
+	default n
+endif
+#

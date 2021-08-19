@@ -1,0 +1,31 @@
+# drivers/staging/samsung/Kconfig
+#
+# Copyright (c) 2010-2011 Samsung Electronics Co., Ltd.
+#		http://www.samsung.com/
+#
+# Licensed under GPLv2
+
+comment "Samsung TN Features"
+menuconfig SEC_DEBUG
+	bool "Enable TN debugging features"
+	depends on EXYNOS_SNAPSHOT
+	default y
+
+config SEC_DEBUG_LAST_KMSG
+	bool "Write last_kmsg at /proc/last_kmsg"
+	depends on SEC_DEBUG
+	default y
+
+comment "Samsung TN Build Options"
+config SEC_FACTORY
+	bool "SAMSUNG Factory build option"
+	depends on SEC_EXT
+	default n
+	select SLUB_DEBUG
+	help
+	  Include some codes for Factory binary.
+
+config SAMSUNG_PRODUCT_SHIP
+	bool "set up for product shipping"
+	depends on SEC_EXT
+ 	default n
