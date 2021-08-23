@@ -29,6 +29,13 @@
 #include <linux/vmalloc.h>
 
 #include "ion.h"
+#include "ion_exynos.h"
+
+struct ion_dma_buf_attachment {
+	struct device *dev;
+	struct sg_table *table;
+	struct list_head list;
+};
 
 static struct ion_device *internal_dev;
 static int heap_id;
@@ -164,6 +171,7 @@ static void ion_buffer_kmap_put(struct ion_buffer *buffer)
 	}
 }
 
+#ifndef CONFIG_ION_EXYNOS
 static struct sg_table *dup_sg_table(struct sg_table *table)
 {
 	struct sg_table *new_table;
@@ -195,12 +203,6 @@ static void free_duped_table(struct sg_table *table)
 	sg_free_table(table);
 	kfree(table);
 }
-
-struct ion_dma_buf_attachment {
-	struct device *dev;
-	struct sg_table *table;
-	struct list_head list;
-};
 
 static int ion_dma_buf_attach(struct dma_buf *dmabuf,
 			      struct dma_buf_attachment *attachment)
@@ -267,6 +269,7 @@ static void ion_unmap_dma_buf(struct dma_buf_attachment *attachment,
 {
 	dma_unmap_sg(attachment->dev, table->sgl, table->nents, direction);
 }
+#endif /* !CONFIG_ION_EXYNOS */
 
 static int ion_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma)
 {
@@ -392,12 +395,17 @@ static int ion_dma_buf_end_cpu_access(struct dma_buf *dmabuf,
 }
 
 static const struct dma_buf_ops dma_buf_ops = {
-	.map_dma_buf = ion_map_dma_buf,
-	.unmap_dma_buf = ion_unmap_dma_buf,
-	.mmap = ion_mmap,
-	.release = ion_dma_buf_release,
+#ifdef CONFIG_ION_EXYNOS
+	.map_dma_buf = ion_exynos_map_dma_buf,
+	.unmap_dma_buf = ion_exynos_unmap_dma_buf,
+#else
 	.attach = ion_dma_buf_attach,
 	.detach = ion_dma_buf_detatch,
+	.map_dma_buf = ion_map_dma_buf,
+	.unmap_dma_buf = ion_unmap_dma_buf,
+#endif
+	.mmap = ion_mmap,
+	.release = ion_dma_buf_release,
 	.begin_cpu_access = ion_dma_buf_begin_cpu_access,
 	.end_cpu_access = ion_dma_buf_end_cpu_access,
 	.map = ion_dma_buf_kmap,
