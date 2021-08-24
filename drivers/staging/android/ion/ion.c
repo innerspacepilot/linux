@@ -96,6 +96,7 @@ static struct ion_buffer *ion_buffer_create(struct ion_heap *heap,
 	}
 
 	INIT_LIST_HEAD(&buffer->attachments);
+	INIT_LIST_HEAD(&buffer->iovas);
 	mutex_init(&buffer->lock);
 	mutex_lock(&dev->buffer_lock);
 	ion_buffer_add(dev, buffer);

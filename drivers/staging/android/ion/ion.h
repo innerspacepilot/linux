@@ -76,6 +76,7 @@ struct ion_buffer {
 	void *vaddr;
 	struct sg_table *sg_table;
 	struct list_head attachments;
+	struct list_head iovas;
 };
 
 void ion_buffer_destroy(struct ion_buffer *buffer);
