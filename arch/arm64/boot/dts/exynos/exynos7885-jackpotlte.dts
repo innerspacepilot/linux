@@ -93,3 +93,12 @@
 		samsung,pin-drv = <0>;
 	};
 };
+
+&i2c_1 {
+	status = "okay";
+	s2mu004@3d {
+		status = "okay";
+		compatible = "samsung,s2mu004";
+		reg = <0x3d>;
+	};
+};
